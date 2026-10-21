@@ -1,26 +1,249 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ------------------------------------------------------------------ */
+/* design tokens — see .claude/skills/fridge-design-system/SKILL.md    */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* the fridge: deep green powder coat */
+  --color-fridge: #1c3a32;
+  --color-fridge-deep: #142c26;
+  --color-fridge-sheen: #2c5247;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* paper notes */
+  --color-paper: #fbf7ee;
+  --color-paper-dim: #ede8da;
+  --color-paper-edge: #cbc6b6;
+  --color-ink: #33302a;
+  --color-ink-soft: #4a453a;
+  --color-ink-quiet: #8f8a7d;
+  --color-ink-faint: #c9c5b8;
+  --color-line: #cfccc0;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* text on the green */
+  --color-ivory: #efe9da;
+  --color-ivory-quiet: #a8b5ac;
+
+  /* the warmth: magnets and the one call to action */
+  --color-ember: #e2702f;
+  --color-ember-soft: #f0935c;
+  --color-ember-deep: #b8561f;
+  --color-ember-glow: #f8b48a;
+  --color-paper-hover: #e3ddcc;
+
+  --font-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+
+  --shadow-magnet: 0 1px 2px rgba(20, 14, 6, 0.28), 0 2px 6px rgba(20, 14, 6, 0.14);
+  --shadow-lifted: 0 5px 12px rgba(20, 14, 6, 0.32), 0 12px 28px rgba(20, 14, 6, 0.18);
+
+  --animate-arrive: arrive 0.26s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+  --animate-wiggle: wiggle 0.22s ease-in-out;
+  --animate-settle: settle 0.35s ease-out;
+
+  @keyframes arrive {
+    0% { opacity: 0; translate: 0 -16px; scale: 1.1; }
+    70% { opacity: 1; translate: 0 1px; }
+    100% { opacity: 1; translate: 0 0; scale: 1; }
+  }
+  @keyframes wiggle {
+    25% { rotate: -2.5deg; }
+    75% { rotate: 2.5deg; }
+  }
+  @keyframes settle {
+    from { opacity: 0; translate: 0 10px; }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ */
+/* base                                                                */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    /* the surface of the fridge: green powder coat with a fine speckle
+       (a tiny inline svg, no image files) and a soft diagonal sheen */
+    background-color: var(--color-fridge);
+    background-image:
+      linear-gradient(100deg, rgba(240, 147, 92, 0.1) 0%, rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.2) 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: var(--color-ivory);
+    font-family: var(--font-serif);
+  }
+
+  ::selection {
+    background: var(--color-ember-soft);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 1px dotted var(--color-ember-soft);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* components — the fridge's small vocabulary                          */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* a sheet of paper held to the fridge. sits a little crooked via --rot */
+  .paper {
+    position: relative;
+    background: var(--color-paper);
+    border: 1px solid var(--color-paper-edge);
+    box-shadow: var(--shadow-magnet);
+    color: var(--color-ink);
+    rotate: var(--rot, 0deg);
+  }
+
+  /* the round orange magnet that holds a sheet */
+  .magnet {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+    margin-left: -7.5px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--color-ember-glow) 0, var(--color-ember) 45%, var(--color-ember-deep) 100%);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  }
+
+  /* the wordmark is itself a magnet, slightly crooked */
+  .wordmark {
+    display: inline-block;
+    background: var(--color-paper);
+    border: 1px solid var(--color-paper-edge);
+    box-shadow: var(--shadow-magnet);
+    color: var(--color-ink);
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    padding: 0.14em 0.5em 0.2em;
+    rotate: -1.3deg;
+    text-decoration: none;
+  }
+
+  /* quiet text buttons and links: grey, dotted underline */
+  .quiet {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--color-ink-quiet);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+  .quiet:hover:not(:disabled) { color: var(--color-ink); }
+  .quiet:disabled { opacity: 0.45; cursor: default; }
+
+  /* the same, for text sitting on the green */
+  .quiet-on-fridge { color: var(--color-ivory-quiet); }
+  .quiet-on-fridge:hover:not(:disabled) { color: var(--color-ivory); }
+
+  /* proper buttons: plain rectangles, bordered like the paper, no radius */
+  .btn {
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    color: var(--color-ink-soft);
+    background: var(--color-paper-dim);
+    border: 1px solid var(--color-paper-edge);
+    white-space: nowrap;
+    padding: 0.45em 1.15em 0.5em;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(20, 14, 6, 0.14);
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .btn:hover:not(:disabled) { background: var(--color-paper-hover); }
+  .btn:disabled { opacity: 0.45; cursor: default; }
+
+  /* the one warm button on the page */
+  .btn-ember {
+    color: var(--color-paper);
+    background: var(--color-ember);
+    border-color: var(--color-ember-deep);
+  }
+  .btn-ember:hover:not(:disabled) { background: var(--color-ember-soft); }
+
+  /* a single writing line on the fridge */
+  .writing-line {
+    width: 100%;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    font: inherit;
+    color: var(--color-ivory);
+    padding: 0.3em 0.2em 0.5em;
+    text-align: center;
+    transition: border-color 0.15s ease;
+  }
+  /* focus is shown by the line itself brightening, not by a ring */
+  .writing-line:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-ivory);
+  }
+  .writing-line::placeholder {
+    color: var(--color-ivory-quiet);
+    font-style: italic;
+    opacity: 1;
+  }
+
+  /* fields inside a sheet of paper: no chrome at all */
+  .field {
+    width: 100%;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: var(--color-ink);
+    padding: 0;
+    resize: none;
+    field-sizing: content;
+  }
+  /* on paper, keyboard focus is a faint dotted frame around the field */
+  .field:focus-visible {
+    outline: 1px dotted var(--color-line);
+    outline-offset: 4px;
+  }
+  .field::placeholder {
+    color: var(--color-ink-faint);
+    font-style: italic;
+    opacity: 1;
+  }
+
+  /* the thin grey line between title and body: never reaches the edges */
+  .divider {
+    width: 85%;
+    margin: 0 auto;
+    border: 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* the fridge board: notes side by side, flowing into columns */
+  .board {
+    column-gap: 2.5rem;
+    columns: 1;
+  }
+  @media (min-width: 40rem) { .board { columns: 2; } }
+  @media (min-width: 64rem) { .board { columns: 3; } }
+  .board > * {
+    break-inside: avoid;
+    margin-bottom: 2.5rem;
+  }
 }

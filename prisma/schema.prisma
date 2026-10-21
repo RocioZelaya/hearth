@@ -1,0 +1,53 @@
+// Fridge data model. See .claude/skills/fridge-conventions for how to change it.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// A note pinned to the fridge: a short ask plus a payment link.
+model Note {
+  id         String   @id @default(cuid())
+  title      String
+  body       String
+  authorName String?
+  paymentUrl String
+  /// Detected from paymentUrl host: paypal | mercadopago | kofi | bmac | cashapp | venmo | patreon | other
+  provider   String
+  reports    Int      @default(0)
+  hidden     Boolean  @default(false)
+  ipHash     String
+  createdAt  DateTime @default(now())
+
+  reportedBy Report[]
+
+  @@index([hidden, createdAt])
+}
+
+/// One report per visitor per note.
+model Report {
+  id        Int      @id @default(autoincrement())
+  noteId    String
+  ipHash    String
+  createdAt DateTime @default(now())
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, ipHash])
+}
+
+/// Sliding-window rate limiting, keyed by a hashed IP.
+model RateLimitHit {
+  id        Int      @id @default(autoincrement())
+  ipHash    String
+  action    String
+  createdAt DateTime @default(now())
+
+  @@index([ipHash, action, createdAt])
+  @@index([createdAt])
+}

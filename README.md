@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# fridge
 
-## Getting Started
+a fridge full of notes. someone writes what they need and leaves a link where money can be sent. anyone with more than enough can walk by, read, and help.
 
-First, run the development server:
+- **home** (`/`) — one writing line. touch it and it unfolds into a sheet of paper: a title, a thin grey line, the note. below it, your payment link and (optionally) your name.
+- **the fridge** (`/fridge`) — everyone's notes, side by side, each held by an orange magnet, newest first. every note has one warm button: *help with this →*, which opens the author's payment link.
+- **a note** (`/notes/<id>`) — a single sheet, shareable.
+
+the look borrows the grammar of [fridgle.net](https://fridgle.net) — speckled fridge surface, crooked paper magnets, system serif, lowercase quiet UI — in deep green with orange warmth. see `.claude/skills/fridge-design-system/SKILL.md`.
+
+## run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env        # set a real IP_HASH_SALT in production
+npm install                 # also generates the prisma client
+npm run db:migrate          # creates prisma/dev.db
+npm run db:seed             # optional: 8 sample notes
+npm run dev                 # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+requires node 20.9+. no native modules.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## how it holds up
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **input**: title ≤ 60, body ≤ 280, name ≤ 30; everything validated with zod on the server (`src/lib/validation.ts`).
+- **links**: https only, no credentials, public host; stored normalised and rendered as `target="_blank" rel="noopener noreferrer nofollow"`. the provider (paypal, mercado pago, ko-fi, buy me a coffee, cash app, venmo, patreon) is detected from the host for the small "via …" label.
+- **abuse**: 3 notes per 10 minutes per visitor (hashed ip, never stored raw), a honeypot field, and a quiet *report* on every note — 5 reports take it down.
+- **privacy**: no accounts, no cookies, no analytics. the only thing stored about a visitor is a salted hash of their ip.
 
-## Learn More
+## stack
 
-To learn more about Next.js, take a look at the following resources:
+next.js 16 (app router, cache components) · react 19 · typescript · tailwind v4 · prisma 6 + sqlite · zod 4 · vitest
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/app            routes and server actions
+src/components     compose form, note card, board, header
+src/lib            validation, payment links, rate limit, data access (all unit-tested)
+prisma             schema, migrations, seed
+.claude            skills (design system, conventions) and agents (ui-reviewer, code-reviewer, qa-browser)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## scripts
 
-## Deploy on Vercel
+| | |
+|---|---|
+| `npm run dev` | dev server |
+| `npm run build` / `npm start` | production |
+| `npm run lint` · `npm run typecheck` · `npm test` | the three checks |
+| `npm run db:migrate` · `npm run db:seed` · `npm run db:studio` | database |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## working on it with claude code
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+the repo ships two skills and three agents under `.claude/`:
+
+- `fridge-design-system` — tokens, vocabulary, motion, voice. load before touching ui.
+- `fridge-conventions` — where things go, the security rules, commands. load before adding a feature.
+- `ui-reviewer` — checks components against the design system.
+- `code-reviewer` — runs lint/typecheck/tests and checks validation, links, privacy, next 16 patterns.
+- `qa-browser` — drives the real app in the browser, desktop and phone, and reports with screenshots.
+
+## not yet
+
+email verification, editing or deleting your own note, a moderation view, and a postgres datasource for production are all deliberate omissions for the first version. the schema and `src/lib/notes.ts` are the places to grow from.
