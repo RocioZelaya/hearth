@@ -57,7 +57,7 @@ export function ComposeNote() {
   }
 
   return (
-    <form action={formAction} className="mx-auto w-full max-w-md animate-settle" noValidate>
+    <form action={formAction} className="mx-auto w-full max-w-md" noValidate>
       <div
         className={`paper px-7 pt-7 pb-6 ${wiggling ? "animate-wiggle" : ""}`}
         style={SHEET_TILT}
@@ -117,7 +117,7 @@ export function ComposeNote() {
               inputMode="url"
               autoComplete="off"
               className="writing-line text-left"
-              placeholder="paypal.me/you · mpago.la/… · ko-fi.com/you"
+              placeholder="paypal.me/you, mpago.la/…, ko-fi.com/you"
               value={paymentUrl}
               maxLength={LIMITS.paymentUrl}
               onChange={(e) => setPaymentUrl(e.target.value)}
@@ -155,7 +155,7 @@ export function ComposeNote() {
 
         <div className="flex items-center justify-between gap-4 pt-1">
           <Link href="/hearth" className="quiet quiet-on-wall">
-            see the hearth →
+            see the hearth
           </Link>
           <button type="submit" className="btn btn-ember" disabled={pending}>
             {pending ? "pinning…" : "leave it by the fire"}

@@ -39,10 +39,10 @@ export function NoteCard({ note, highlight = false, standalone = false }: Props)
       <p className="mt-3 text-[1.02rem] leading-relaxed whitespace-pre-line text-ink-soft">{note.body}</p>
 
       <p className="mt-4 text-sm text-ink-quiet italic">
-        — {note.authorName ?? "someone"} · {relativeTime(note.createdAt)}
+        {note.authorName ?? "someone"}, {relativeTime(note.createdAt)}
       </p>
 
-      <div className="mt-5 flex items-end justify-between gap-3">
+      <div className="mt-5 flex items-baseline justify-between gap-3">
         <HelpLink url={note.paymentUrl} provider={note.provider} />
         <ReportButton noteId={note.id} />
       </div>

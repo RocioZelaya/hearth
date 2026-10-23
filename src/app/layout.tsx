@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default: "hearth",
-    template: "%s · hearth",
+    template: "%s, hearth",
   },
   description:
     "notes left by the fire. someone writes what they need; anyone with more than enough can help.",

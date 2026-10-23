@@ -27,7 +27,7 @@ export default function NotePage({ params }: PageProps<"/notes/[id]">) {
             the hearth
           </Link>
           <Link href="/" className="quiet quiet-on-wall">
-            write a note
+            leave a note
           </Link>
         </>
       }
@@ -47,7 +47,7 @@ async function SingleNote({ params }: Pick<PageProps<"/notes/[id]">, "params">) 
   if (!note) notFound();
 
   return (
-    <div className="mx-auto w-full max-w-md animate-settle">
+    <div className="mx-auto w-full max-w-md">
       <NoteCard note={note} standalone />
     </div>
   );

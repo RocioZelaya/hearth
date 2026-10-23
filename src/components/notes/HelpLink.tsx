@@ -5,14 +5,12 @@ type Props = {
   provider: Provider;
 };
 
-/** The warm button on every note: opens the author's payment link. */
+/** The warm button on every note: opens the author's payment link, naming where it goes. */
 export function HelpLink({ url, provider }: Props) {
+  const label = provider === "other" ? "warm this up" : `warm this up on ${providerLabel(provider)}`;
   return (
-    <span className="flex flex-col items-start gap-1">
-      <a href={url} target="_blank" rel="noopener noreferrer nofollow" className="btn btn-ember">
-        warm this up →
-      </a>
-      <span className="text-xs text-ink-quiet">via {providerLabel(provider)}</span>
-    </span>
+    <a href={url} target="_blank" rel="noopener noreferrer nofollow" className="btn btn-ember">
+      {label}
+    </a>
   );
 }

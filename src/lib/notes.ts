@@ -31,6 +31,11 @@ export type NotePage = {
   page: number;
 };
 
+/** Notes currently on the wall. */
+export async function countVisibleNotes(): Promise<number> {
+  return db.note.count({ where: { hidden: false } });
+}
+
 export async function listNotes(requestedPage: number): Promise<NotePage> {
   const total = await db.note.count({ where: { hidden: false } });
   const pages = Math.max(1, Math.ceil(total / NOTES_PER_PAGE));

@@ -19,10 +19,11 @@ description: The hearth's visual language — tokens, typography, the paper/pin 
 | `paper-dim` | `#eadfc3` | plain `.btn` background |
 | `paper-edge` | `#d0c3a3` | the 1px border on every paper thing |
 | `ink` / `ink-soft` | `#35302a` / `#4d463a` | text on paper: titles / body |
-| `ink-quiet` | `#8d8471` | metadata, counters, quiet buttons on paper |
+| `ink-quiet` | `#736d5c` | metadata, counters, quiet buttons on paper |
 | `ink-faint` | `#c3b89c` | placeholders on paper |
 | `line` | `#d7cbad` | the thin divider and writing lines |
-| `ivory` / `ivory-quiet` | `#efe5cc` / `#a9b4a2` | text on the green: primary / metadata |
+| `ivory` / `ivory-quiet` | `#efe5cc` / `#b3bdac` | text on the green: primary / metadata |
+| `brass` / `brass-light` / `brass-deep` | `#b48d47` / `#e3c57c` / `#78592a` | the pin only |
 | `ember` / `ember-soft` / `ember-deep` | `#c66a3c` / `#d88b5e` / `#9a4e28` | pins, the "help with this" button, errors |
 
 Use them as Tailwind utilities (`text-ink-quiet`, `bg-paper`, `border-paper-edge`, `text-ember`). **Never hardcode a hex in a component.** If a colour is missing, add a token.
@@ -61,7 +62,6 @@ Tilt: every sheet gets `--rot` between about −2° and 2°, **deterministic** f
 
 - `animate-arrive` — a note dropping onto the hearth (0.26s, slight overshoot). Stagger with `animationDelay`, cap at ~12 items.
 - `animate-wiggle` — the "no" shake on a rejected submit. Remove the class on `animationend` so it can fire again.
-- `animate-settle` — a card easing into place (0.35s).
 - Everything respects `prefers-reduced-motion` globally. Don't add `transition-all`; transition only `color`/`background-color`.
 
 ## Layout
@@ -72,13 +72,13 @@ Tilt: every sheet gets `--rot` between about −2° and 2°, **deterministic** f
 
 ## Voice
 
-Short, warm, lowercase, no exclamation marks. Errors are kind and specific: "only https links, please." Buttons say what happens: "leave it by the fire", "warm this up →".
+Short, warm, lowercase, no exclamation marks. Errors are kind and specific: "only https links, please." Buttons say what happens: "leave it by the fire", "warm this up on paypal". **No trailing arrows on links or buttons, no middle-dot meta strings**: write meta as prose ("mara, two days ago", "seven notes by the fire tonight") and spell numbers up to twenty.
 
 ## Don't
 
 - No border radius on paper or buttons (the pin is the only circle).
 - No bold titles, no uppercase, no coloured headings.
-- No icons/emoji; a `→` or `·` is as far as it goes.
+- No icons, emoji, arrows or middle dots.
 - No second accent colour. If it's not orange and not paper, it's green or ivory.
 - No webfonts, images or illustrations.
 

@@ -17,7 +17,7 @@ export default function ErrorPage({ reset }: Props) {
           try again
         </button>
         <Link href="/hearth" className="quiet quiet-on-wall">
-          back to the hearth →
+          back to the hearth
         </Link>
       </div>
     </main>
