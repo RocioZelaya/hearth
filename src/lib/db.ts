@@ -12,20 +12,20 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 /**
- * Production (Vercel) has no durable filesystem, so the notes live in Turso,
- * a hosted SQLite reached through the libsql driver adapter. Locally, with no
- * TURSO_DATABASE_URL, the built-in engine opens the SQLite file directly.
+ * One driver everywhere (libsql, no Rust engine to ship): production talks to
+ * Turso through TURSO_DATABASE_URL; locally the same driver opens the SQLite
+ * file named by DATABASE_URL. Vercel has no durable disk, so a missing Turso
+ * URL there is a configuration error, not a fallback.
  */
 function createClient(): PrismaClient {
   const tursoUrl = process.env.TURSO_DATABASE_URL;
-  if (tursoUrl) {
-    const adapter = new PrismaLibSQL({ url: tursoUrl, authToken: process.env.TURSO_AUTH_TOKEN });
-    return new PrismaClient({ adapter });
-  }
-  if (process.env.VERCEL) {
+  if (!tursoUrl && process.env.VERCEL) {
     throw new Error("TURSO_DATABASE_URL must be set on Vercel: the filesystem there does not persist.");
   }
-  return new PrismaClient({ datasourceUrl: resolveDatabaseUrl() });
+  const adapter = tursoUrl
+    ? new PrismaLibSQL({ url: tursoUrl, authToken: process.env.TURSO_AUTH_TOKEN })
+    : new PrismaLibSQL({ url: resolveDatabaseUrl() });
+  return new PrismaClient({ adapter });
 }
 
 /**
@@ -33,9 +33,9 @@ function createClient(): PrismaClient {
  * the same way the Prisma CLI does, so the app and the migrations agree on
  * which SQLite file is "the" database regardless of where the bundle runs.
  */
-function resolveDatabaseUrl(): string | undefined {
-  const url = process.env.DATABASE_URL;
-  if (!url?.startsWith("file:")) return url;
+function resolveDatabaseUrl(): string {
+  const url = process.env.DATABASE_URL ?? "file:./dev.db";
+  if (!url.startsWith("file:")) return url;
   const file = url.slice("file:".length);
   if (path.isAbsolute(file)) return url;
   return `file:${path.resolve(process.cwd(), "prisma", file)}`;

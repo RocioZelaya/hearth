@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { Page } from "@/components/layout/Page";
 import { NoteBoard } from "@/components/notes/NoteBoard";
@@ -28,6 +29,7 @@ export default function HearthPage({ searchParams }: PageProps<"/hearth">) {
 }
 
 async function Board({ searchParams }: Pick<PageProps<"/hearth">, "searchParams">) {
+  await connection();
   const params = await searchParams;
   const highlightId = first(params.new);
   const { notes, total, pages, page } = await listNotes(parsePage(first(params.page)));

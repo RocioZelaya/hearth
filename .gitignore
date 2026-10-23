@@ -48,3 +48,6 @@ prisma/*.db
 prisma/*.db-journal
 .dev.log
 .env.turso
+
+.vercel
+.env*

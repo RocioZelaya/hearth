@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { ComposeNote } from "@/components/compose/ComposeNote";
 import { Page } from "@/components/layout/Page";
@@ -29,6 +30,7 @@ export default function HomePage() {
 
 /** One live line so the room feels inhabited before you write. */
 async function TonightCount() {
+  await connection();
   const total = await countVisibleNotes();
   return (
     <Tonight>{total === 0 ? "the fire is lit. no notes yet." : `${countNoun(total, "note")} by the fire tonight.`}</Tonight>

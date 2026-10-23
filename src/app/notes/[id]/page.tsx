@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { Page } from "@/components/layout/Page";
 import { NoteCard } from "@/components/notes/NoteCard";
@@ -42,6 +43,7 @@ export default function NotePage({ params }: PageProps<"/notes/[id]">) {
 }
 
 async function SingleNote({ params }: Pick<PageProps<"/notes/[id]">, "params">) {
+  await connection();
   const { id } = await params;
   const note = await getNote(id);
   if (!note) notFound();
