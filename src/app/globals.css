@@ -29,6 +29,11 @@
   --color-ember-deep: #9a4e28;
   --color-ember-glow: #e7ab84;
   --color-paper-hover: #e2d6b7;
+  --color-rule: #d9c9a9;          /* the ruled lines on lined paper */
+  --color-sticky-yellow: #f1dd8a;
+  --color-sticky-rose: #efc3b4;
+  --color-sticky-sage: #cfdab3;
+  --color-sticky-blue: #bfd3df;
 
   /* the brass pin that holds each sheet */
   --color-brass: #b48d47;
@@ -108,7 +113,55 @@
     rotate: var(--rot, 0deg);
   }
 
-  /* the round brass-orange pin that holds a sheet */
+  /* ---- sheets: what the note is written on ---- */
+
+  /* lined paper: faint rules, spaced to the body's line height */
+  .sheet-ruled {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(1.66rem - 1px),
+      var(--color-rule) calc(1.66rem - 1px),
+      var(--color-rule) 1.66rem
+    );
+    background-position: 0 1.1rem;
+  }
+
+  /* cut out by hand: no straight edges, no border */
+  .sheet-torn {
+    border: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 1px 1px rgba(20, 14, 6, 0.3)) drop-shadow(0 3px 6px rgba(20, 14, 6, 0.16));
+    clip-path: polygon(
+      0.6% 1.2%, 6% 0, 13% 1.5%, 22% 0.3%, 31% 1.8%, 40% 0.2%, 50% 1.4%, 59% 0, 68% 1.6%, 77% 0.4%, 86% 1.9%, 94% 0.3%, 99.6% 1.4%,
+      100% 10%, 98.6% 20%, 100% 31%, 98.9% 42%, 100% 53%, 98.7% 64%, 100% 75%, 98.8% 86%, 99.7% 97%,
+      93% 100%, 84% 98.4%, 75% 100%, 66% 98.6%, 56% 100%, 47% 98.3%, 38% 100%, 29% 98.7%, 19% 100%, 10% 98.5%, 2% 100%,
+      0 92%, 1.3% 81%, 0 70%, 1.1% 59%, 0 48%, 1.2% 37%, 0 26%, 1.4% 15%
+    );
+  }
+
+  /* sticky notes: a flat square of colour, no border, a curl of shadow at the bottom */
+  [class*="sheet-sticky"] {
+    border: 0;
+    box-shadow: 0 1px 2px rgba(20, 14, 6, 0.2), 0 6px 10px -6px rgba(20, 14, 6, 0.45);
+  }
+  .sheet-sticky-yellow { background: var(--color-sticky-yellow); }
+  .sheet-sticky-rose { background: var(--color-sticky-rose); }
+  .sheet-sticky-sage { background: var(--color-sticky-sage); }
+  .sheet-sticky-blue { background: var(--color-sticky-blue); }
+  /* the top strip of a sticky note is a touch darker where the glue is */
+  [class*="sheet-sticky"]::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1.4rem;
+    background: rgba(20, 14, 6, 0.045);
+    pointer-events: none;
+  }
+
+  /* ---- holders: what keeps the sheet on the wall ---- */
+
+  /* the round brass pin at the top centre */
   .pin {
     position: absolute;
     top: -8px;
@@ -120,6 +173,27 @@
     background: radial-gradient(circle at 35% 30%, var(--color-brass-light) 0, var(--color-brass) 45%, var(--color-brass-deep) 100%);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
   }
+
+  /* a strip of translucent tape */
+  .tape {
+    position: absolute;
+    width: 74px;
+    height: 22px;
+    background: rgba(248, 240, 214, 0.66);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 1px 2px rgba(20, 14, 6, 0.12);
+    pointer-events: none;
+  }
+  .holder-tape .tape {
+    top: -11px;
+    left: 50%;
+    margin-left: -37px;
+    rotate: -3deg;
+  }
+  .holder-tape-corners .tape { width: 64px; }
+  .holder-tape-corners .tape-left { top: -8px; left: -20px; rotate: -42deg; }
+  .holder-tape-corners .tape-right { top: -8px; right: -20px; rotate: 42deg; }
 
   /* the wordmark: just the word, set in ivory on the wall */
   .wordmark {

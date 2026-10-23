@@ -46,6 +46,8 @@ The body already carries the wall: green + inline SVG speckle (`feTurbulence`, a
 | class | what it is |
 |---|---|
 | `.paper` | a sheet: paper bg, 1px `paper-edge`, `shadow-pin`, **radius 0**, tilted by `--rot` |
+| `.sheet-*` | what the note is written on: `plain`, `ruled` (faint lines), `torn` (hand-cut clip-path), `sticky-yellow/rose/sage/blue` (flat colour, no border). Chosen per note by `paperLook(id)` in `src/lib/paper.ts`; never pick by hand |
+| `.holder-*` + `.pin` / `.tape` | what holds the sheet: a brass pin, one strip of tape, or two corner strips. Sticky notes have none |
 | `.pin` | the round brass-orange pin at the top-centre of a `.paper` (`position: absolute`, parent must be `relative` — `.paper` already is) |
 | `.wordmark` | the "hearth" logo: the bare word in ivory, 1.5rem, no box |
 | `.quiet` | text button/link: grey, dotted underline, darkens on hover. Add `.quiet-on-wall` when it sits on the green |

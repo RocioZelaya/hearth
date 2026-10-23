@@ -7,7 +7,9 @@
  *
  *   TURSO_DATABASE_URL=libsql://… TURSO_AUTH_TOKEN=… npm run db:migrate:turso
  */
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: ".env.turso" });
+loadEnv();
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { createClient } from "@libsql/client";

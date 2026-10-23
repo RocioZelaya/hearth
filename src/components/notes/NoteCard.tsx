@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { unitHash } from "@/lib/hash";
 import type { PublicNote } from "@/lib/notes";
+import { paperClasses, paperLook, type Holder as HolderKind } from "@/lib/paper";
 import { relativeTime } from "@/lib/time";
 import { HelpLink } from "./HelpLink";
 import { ReportButton } from "./ReportButton";
@@ -14,14 +14,14 @@ type Props = {
   standalone?: boolean;
 };
 
-/** A sheet of paper by the fire, held by one brass-orange pin. */
+/** A sheet of paper by the fire: lined, torn or a sticky note, pinned or taped. */
 export function NoteCard({ note, highlight = false, standalone = false }: Props) {
-  const tilt = (unitHash(note.id) * 4 - 2).toFixed(2);
-  const style = { "--rot": `${tilt}deg` } as CSSProperties;
+  const look = paperLook(note.id);
+  const style = { "--rot": `${look.tilt}deg` } as CSSProperties;
 
   return (
-    <article className={`paper px-6 pt-7 pb-5 ${highlight ? "shadow-lifted" : ""}`} style={style}>
-      <span className="pin" aria-hidden />
+    <article className={`${paperClasses(look)} px-6 pt-7 pb-5 ${highlight ? "shadow-lifted" : ""}`} style={style}>
+      <Holder holder={look.holder} />
 
       <h2 className="text-[1.25rem] leading-snug">
         {standalone ? (
@@ -48,4 +48,22 @@ export function NoteCard({ note, highlight = false, standalone = false }: Props)
       </div>
     </article>
   );
+}
+
+function Holder({ holder }: { holder: HolderKind }) {
+  switch (holder) {
+    case "pin":
+      return <span className="pin" aria-hidden />;
+    case "tape":
+      return <span className="tape" aria-hidden />;
+    case "tape-corners":
+      return (
+        <>
+          <span className="tape tape-left" aria-hidden />
+          <span className="tape tape-right" aria-hidden />
+        </>
+      );
+    default:
+      return null;
+  }
 }
