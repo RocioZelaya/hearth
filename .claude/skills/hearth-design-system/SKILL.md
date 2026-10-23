@@ -47,7 +47,7 @@ The body already carries the wall: green + inline SVG speckle (`feTurbulence`, a
 |---|---|
 | `.paper` | a sheet: paper bg, 1px `paper-edge`, `shadow-pin`, **radius 0**, tilted by `--rot` |
 | `.pin` | the round brass-orange pin at the top-centre of a `.paper` (`position: absolute`, parent must be `relative` — `.paper` already is) |
-| `.wordmark` | the "hearth" logo: a crooked paper tile (`rotate: -1.3deg`) |
+| `.wordmark` | the "hearth" logo: the bare word in ivory, 1.5rem, no box |
 | `.quiet` | text button/link: grey, dotted underline, darkens on hover. Add `.quiet-on-wall` when it sits on the green |
 | `.btn` | a real button: flat rectangle, bordered like paper, no radius |
 | `.btn.btn-ember` | the warm button. **One per note, one per form.** Nothing else is orange except pins, error text and a character counter that is near its limit |
