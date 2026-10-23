@@ -1,5 +1,5 @@
 /**
- * Puts a handful of notes on the fridge so the board has something to show.
+ * Puts a handful of notes by the fire so the board has something to show.
  * Run with `npm run db:seed`. Safe to run twice: it skips if notes exist.
  */
 import { db } from "../src/lib/db";
@@ -69,7 +69,7 @@ const SAMPLE_NOTES = [
 async function main() {
   const existing = await db.note.count();
   if (existing > 0) {
-    console.log(`fridge already has ${existing} notes; nothing to seed.`);
+    console.log(`hearth already has ${existing} notes; nothing to seed.`);
     return;
   }
 
@@ -89,7 +89,7 @@ async function main() {
       },
     });
   }
-  console.log(`pinned ${SAMPLE_NOTES.length} notes to the fridge.`);
+  console.log(`pinned ${SAMPLE_NOTES.length} notes to the hearth.`);
 }
 
 main()

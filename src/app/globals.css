@@ -1,38 +1,38 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/* design tokens — see .claude/skills/fridge-design-system/SKILL.md    */
+/* design tokens — see .claude/skills/hearth-design-system/SKILL.md    */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* the fridge: deep green powder coat */
-  --color-fridge: #1c3a32;
-  --color-fridge-deep: #142c26;
-  --color-fridge-sheen: #2c5247;
+  /* the wall: deep green plaster */
+  --color-wall: #1e3b32;
+  --color-wall-deep: #152d27;
+  --color-wall-sheen: #2e5347;
 
   /* paper notes */
-  --color-paper: #fbf7ee;
-  --color-paper-dim: #ede8da;
-  --color-paper-edge: #cbc6b6;
-  --color-ink: #33302a;
-  --color-ink-soft: #4a453a;
-  --color-ink-quiet: #8f8a7d;
-  --color-ink-faint: #c9c5b8;
-  --color-line: #cfccc0;
+  --color-paper: #f4ebd4;
+  --color-paper-dim: #eadfc3;
+  --color-paper-edge: #d0c3a3;
+  --color-ink: #35302a;
+  --color-ink-soft: #4d463a;
+  --color-ink-quiet: #8d8471;
+  --color-ink-faint: #c3b89c;
+  --color-line: #d7cbad;
 
   /* text on the green */
-  --color-ivory: #efe9da;
-  --color-ivory-quiet: #a8b5ac;
+  --color-ivory: #efe5cc;
+  --color-ivory-quiet: #a9b4a2;
 
-  /* the warmth: magnets and the one call to action */
-  --color-ember: #e2702f;
-  --color-ember-soft: #f0935c;
-  --color-ember-deep: #b8561f;
-  --color-ember-glow: #f8b48a;
-  --color-paper-hover: #e3ddcc;
+  /* the warmth: pins and the one call to action */
+  --color-ember: #c66a3c;
+  --color-ember-soft: #d88b5e;
+  --color-ember-deep: #9a4e28;
+  --color-ember-glow: #e7ab84;
+  --color-paper-hover: #e2d6b7;
 
   --font-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
 
-  --shadow-magnet: 0 1px 2px rgba(20, 14, 6, 0.28), 0 2px 6px rgba(20, 14, 6, 0.14);
+  --shadow-pin: 0 1px 2px rgba(20, 14, 6, 0.28), 0 2px 6px rgba(20, 14, 6, 0.14);
   --shadow-lifted: 0 5px 12px rgba(20, 14, 6, 0.32), 0 12px 28px rgba(20, 14, 6, 0.18);
 
   --animate-arrive: arrive 0.26s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
@@ -63,11 +63,11 @@
   }
 
   body {
-    /* the surface of the fridge: green powder coat with a fine speckle
+    /* the wall by the fire: green plaster with a fine speckle
        (a tiny inline svg, no image files) and a soft diagonal sheen */
-    background-color: var(--color-fridge);
+    background-color: var(--color-wall);
     background-image:
-      linear-gradient(100deg, rgba(240, 147, 92, 0.1) 0%, rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.2) 100%),
+      linear-gradient(100deg, rgba(216, 139, 94, 0.12) 0%, rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.2) 100%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     color: var(--color-ivory);
     font-family: var(--font-serif);
@@ -94,21 +94,21 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* components — the fridge's small vocabulary                          */
+/* components — the hearth's small vocabulary                         */
 /* ------------------------------------------------------------------ */
 @layer components {
-  /* a sheet of paper held to the fridge. sits a little crooked via --rot */
+  /* a sheet of paper held to the hearth. sits a little crooked via --rot */
   .paper {
     position: relative;
     background: var(--color-paper);
     border: 1px solid var(--color-paper-edge);
-    box-shadow: var(--shadow-magnet);
+    box-shadow: var(--shadow-pin);
     color: var(--color-ink);
     rotate: var(--rot, 0deg);
   }
 
-  /* the round orange magnet that holds a sheet */
-  .magnet {
+  /* the round brass-orange pin that holds a sheet */
+  .pin {
     position: absolute;
     top: -8px;
     left: 50%;
@@ -120,12 +120,12 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
   }
 
-  /* the wordmark is itself a magnet, slightly crooked */
+  /* the wordmark is itself a paper tile, slightly crooked */
   .wordmark {
     display: inline-block;
     background: var(--color-paper);
     border: 1px solid var(--color-paper-edge);
-    box-shadow: var(--shadow-magnet);
+    box-shadow: var(--shadow-pin);
     color: var(--color-ink);
     font-size: 1.4rem;
     letter-spacing: 0.02em;
@@ -153,8 +153,8 @@
   .quiet:disabled { opacity: 0.45; cursor: default; }
 
   /* the same, for text sitting on the green */
-  .quiet-on-fridge { color: var(--color-ivory-quiet); }
-  .quiet-on-fridge:hover:not(:disabled) { color: var(--color-ivory); }
+  .quiet-on-wall { color: var(--color-ivory-quiet); }
+  .quiet-on-wall:hover:not(:disabled) { color: var(--color-ivory); }
 
   /* proper buttons: plain rectangles, bordered like the paper, no radius */
   .btn {
@@ -182,7 +182,7 @@
   }
   .btn-ember:hover:not(:disabled) { background: var(--color-ember-soft); }
 
-  /* a single writing line on the fridge */
+  /* a single writing line by the fire */
   .writing-line {
     width: 100%;
     background: none;
@@ -235,7 +235,7 @@
     border-top: 1px solid var(--color-line);
   }
 
-  /* the fridge board: notes side by side, flowing into columns */
+  /* the board: notes side by side, flowing into columns */
   .board {
     column-gap: 2.5rem;
     columns: 1;

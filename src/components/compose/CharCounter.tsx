@@ -5,7 +5,7 @@ type Props = {
 
 /**
  * "12 / 60", quiet until the limit is near, then ember.
- * Orange here is the one allowed warning outside magnets, CTA and errors
+ * Orange here is the one allowed warning outside pins, CTA and errors
  * (see the design skill); it's only announced once it matters.
  */
 export function CharCounter({ value, max }: Props) {

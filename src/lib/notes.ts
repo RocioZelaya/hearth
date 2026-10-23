@@ -1,10 +1,11 @@
+import { cache } from "react";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "./db";
-import { detectProvider, type Provider } from "./payment-links";
+import { parsePaymentUrl, type Provider } from "./payment-links";
 
 export const NOTES_PER_PAGE = 36;
 
-/** Reports needed before a note is taken off the fridge. */
+/** Reports needed before a note is taken away from the fire. */
 export const HIDE_AFTER_REPORTS = 5;
 
 /** What the UI is allowed to see of a note. Never the ipHash, reports or hidden. */
@@ -46,12 +47,15 @@ export async function listNotes(requestedPage: number): Promise<NotePage> {
   return { notes: rows.map(toPublic), total, pages, page };
 }
 
-export async function getNote(id: string): Promise<PublicNote | null> {
+/** Memoised per request: metadata and the page both ask for the same note. */
+export const getNote = cache(async (id: string): Promise<PublicNote | null> => {
   const row = await db.note.findFirst({ where: { id, hidden: false }, select: publicSelect });
   return row ? toPublic(row) : null;
-}
+});
 
-/** The stored provider is a plain string; recompute rather than trust it. */
+/** Never trust a stored row blindly: re-validate the link and recompute the provider. */
 function toPublic(row: PublicRow): PublicNote {
-  return { ...row, provider: detectProvider(row.paymentUrl) };
+  const parsed = parsePaymentUrl(row.paymentUrl);
+  const paymentUrl = parsed.ok ? parsed.url : "https://example.invalid/";
+  return { ...row, paymentUrl, provider: parsed.ok ? parsed.provider : "other" };
 }

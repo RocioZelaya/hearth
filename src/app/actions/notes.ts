@@ -1,7 +1,6 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { HIDE_AFTER_REPORTS } from "@/lib/notes";
@@ -14,7 +13,7 @@ export type CreateNoteState = {
   fieldErrors?: Partial<Record<NoteField, string>>;
 } | null;
 
-/** Pins a new note to the fridge, then sends the author to see it. */
+/** Pins a new note to the hearth, then sends the author to see it. */
 export async function createNote(_prev: CreateNoteState, formData: FormData): Promise<CreateNoteState> {
   const parsed = noteInputSchema.safeParse(formToNoteInput(formData));
 
@@ -24,7 +23,7 @@ export async function createNote(_prev: CreateNoteState, formData: FormData): Pr
       const field = issue.path[0];
       if (field === "website") {
         // Honeypot tripped: pretend it worked, store nothing.
-        redirect("/fridge");
+        redirect("/hearth");
       }
       if (isNoteField(field) && !fieldErrors[field]) fieldErrors[field] = issue.message;
     }
@@ -33,7 +32,7 @@ export async function createNote(_prev: CreateNoteState, formData: FormData): Pr
 
   const ipHash = await getVisitorHash();
   if (!(await consumeRateLimit(ipHash, "createNote"))) {
-    return { error: "that's a few notes in a row. give the fridge ten minutes and try again." };
+    return { error: "that's a few notes in a row. give the fire ten minutes and try again." };
   }
 
   const { title, body, authorName, paymentUrl } = parsed.data;
@@ -49,8 +48,7 @@ export async function createNote(_prev: CreateNoteState, formData: FormData): Pr
     select: { id: true },
   });
 
-  revalidatePath("/fridge");
-  redirect(`/fridge?new=${note.id}`);
+  redirect(`/hearth?new=${note.id}`);
 }
 
 export type ReportResult = { ok: true } | { ok: false; error: string };
@@ -72,7 +70,6 @@ export async function reportNote(noteId: string): Promise<ReportResult> {
   const note = await db.note.findUnique({ where: { id: noteId }, select: { id: true } });
   if (!note) return { ok: false, error: "that note doesn't exist." };
 
-  let hiddenNow = false;
   try {
     await db.$transaction(async (tx) => {
       await tx.report.create({ data: { noteId, ipHash } });
@@ -83,7 +80,6 @@ export async function reportNote(noteId: string): Promise<ReportResult> {
       });
       if (updated.reports >= HIDE_AFTER_REPORTS) {
         await tx.note.update({ where: { id: noteId }, data: { hidden: true } });
-        hiddenNow = true;
       }
     });
   } catch (error) {
@@ -92,7 +88,7 @@ export async function reportNote(noteId: string): Promise<ReportResult> {
     throw error;
   }
 
-  if (hiddenNow) revalidatePath("/fridge");
+  // Every page reads the database at request time (inside Suspense), so nothing to revalidate.
   return { ok: true };
 }
 

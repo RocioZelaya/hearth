@@ -8,20 +8,20 @@ import { ReportButton } from "./ReportButton";
 
 type Props = {
   note: PublicNote;
-  /** The note the visitor just pinned: lifted a little off the fridge. */
+  /** The note the visitor just pinned: lifted a little away from the fire. */
   highlight?: boolean;
   /** On its own page the title is not a link. */
   standalone?: boolean;
 };
 
-/** A sheet of paper on the fridge, held by one orange magnet. */
+/** A sheet of paper by the fire, held by one brass-orange pin. */
 export function NoteCard({ note, highlight = false, standalone = false }: Props) {
   const tilt = (unitHash(note.id) * 4 - 2).toFixed(2);
   const style = { "--rot": `${tilt}deg` } as CSSProperties;
 
   return (
     <article className={`paper px-6 pt-7 pb-5 ${highlight ? "shadow-lifted" : ""}`} style={style}>
-      <span className="magnet" aria-hidden />
+      <span className="pin" aria-hidden />
 
       <h2 className="text-[1.25rem] leading-snug">
         {standalone ? (

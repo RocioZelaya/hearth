@@ -6,12 +6,12 @@ type Props = {
   corner?: ReactNode;
 };
 
-/** The masthead: a crooked wordmark magnet and a few quiet links. */
+/** The masthead: a crooked wordmark tile and a few quiet links. */
 export function SiteHeader({ corner }: Props) {
   return (
     <header className="flex items-baseline justify-between gap-4">
       <Link href="/" className="wordmark">
-        fridge
+        hearth
       </Link>
       {corner ? <nav className="flex items-baseline gap-4">{corner}</nav> : null}
     </header>

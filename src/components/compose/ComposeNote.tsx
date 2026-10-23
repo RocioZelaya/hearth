@@ -28,7 +28,7 @@ export function ComposeNote() {
     if (expanded) titleRef.current?.focus();
   }, [expanded]);
 
-  // A rejected submission shakes the sheet, like a magnet that won't stick.
+  // A rejected submission shakes the sheet, like a pin that won't hold.
   // (state is adjusted during render, the React-sanctioned way to react to a prop change)
   const [seenState, setSeenState] = useState(state);
   if (state !== seenState) {
@@ -65,7 +65,7 @@ export function ComposeNote() {
           if (e.target === e.currentTarget) setWiggling(false);
         }}
       >
-        <span className="magnet" aria-hidden />
+        <span className="pin" aria-hidden />
 
         <label className="block">
           <span className="sr-only">title</span>
@@ -127,7 +127,7 @@ export function ComposeNote() {
               <span className="text-xs whitespace-nowrap text-ivory-quiet">via {providerLabel(provider)}</span>
             ) : null}
           </div>
-          <FieldError message={errors.paymentUrl} onFridge />
+          <FieldError message={errors.paymentUrl} onWall />
         </label>
 
         <label className="block">
@@ -142,7 +142,7 @@ export function ComposeNote() {
             maxLength={LIMITS.authorName}
             onChange={(e) => setAuthorName(e.target.value)}
           />
-          <FieldError message={errors.authorName} onFridge />
+          <FieldError message={errors.authorName} onWall />
         </label>
 
         {/* Honeypot: hidden from people, filled by bots. See lib/validation. */}
@@ -154,11 +154,11 @@ export function ComposeNote() {
         </div>
 
         <div className="flex items-center justify-between gap-4 pt-1">
-          <Link href="/fridge" className="quiet quiet-on-fridge">
-            see the fridge →
+          <Link href="/hearth" className="quiet quiet-on-wall">
+            see the hearth →
           </Link>
           <button type="submit" className="btn btn-ember" disabled={pending}>
-            {pending ? "pinning…" : "pin it to the fridge"}
+            {pending ? "pinning…" : "leave it by the fire"}
           </button>
         </div>
 
@@ -172,10 +172,10 @@ export function ComposeNote() {
   );
 }
 
-function FieldError({ message, onFridge = false }: { message?: string; onFridge?: boolean }) {
+function FieldError({ message, onWall = false }: { message?: string; onWall?: boolean }) {
   if (!message) return <span />;
   return (
-    <span role="alert" className={`text-xs italic ${onFridge ? "text-ember-soft" : "text-ember"}`}>
+    <span role="alert" className={`text-xs italic ${onWall ? "text-ember-soft" : "text-ember"}`}>
       {message}
     </span>
   );

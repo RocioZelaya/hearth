@@ -6,14 +6,14 @@ export default function HomePage() {
   return (
     <Page
       corner={
-        <Link href="/fridge" className="quiet quiet-on-fridge">
-          the fridge
+        <Link href="/hearth" className="quiet quiet-on-wall">
+          the hearth
         </Link>
       }
     >
       <section className="flex flex-1 flex-col justify-center py-16">
         <p className="mb-10 text-center text-ivory-quiet italic">
-          write what you need. leave a way to send it. someone might be reading.
+          write what you need. leave a way to send it. someone by the fire might be reading.
         </p>
         <ComposeNote />
       </section>

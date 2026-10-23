@@ -20,10 +20,15 @@ export function tidyText(input: string): string {
     .trim();
 }
 
+/** Single-line fields: any whitespace run (including newlines) becomes one space. */
+export function oneLine(input: string): string {
+  return input.replace(/\s+/g, " ").trim();
+}
+
 export const noteInputSchema = z.object({
   title: z
     .string()
-    .transform(tidyText)
+    .transform(oneLine)
     .pipe(
       z
         .string()
@@ -41,12 +46,13 @@ export const noteInputSchema = z.object({
     ),
   authorName: z
     .string()
-    .transform((v) => v.trim())
+    .transform(oneLine)
     .pipe(z.string().max(LIMITS.authorName, { error: `names stop at ${LIMITS.authorName} characters.` }))
     .transform((v) => (v.length ? v : null)),
   paymentUrl: z
     .string()
-    .max(LIMITS.paymentUrl, { error: "that link is too long." })
+    .transform((v) => v.trim())
+    .pipe(z.string().max(LIMITS.paymentUrl, { error: "that link is too long." }))
     .transform((raw, ctx) => {
       const parsed = parsePaymentUrl(raw);
       if (!parsed.ok) {

@@ -1,9 +1,9 @@
 ---
-name: fridge-conventions
-description: How code is organised and written in the fridge repo — where things go, server vs client components, validation and security rules, data access, commands. Load before adding or changing any feature.
+name: hearth-conventions
+description: How code is organised and written in the hearth repo — where things go, server vs client components, validation and security rules, data access, commands. Load before adding or changing any feature.
 ---
 
-# fridge conventions
+# hearth conventions
 
 Next.js 16 (App Router, Cache Components on), React 19, TypeScript strict, Tailwind v4, Prisma 6 + SQLite, Zod 4, Vitest.
 
@@ -31,10 +31,10 @@ prisma/               schema, migrations, seed
 6. **Data reads happen in server components inside `<Suspense>`** (Cache Components requires it for anything dynamic). Mutations happen in server actions and end with `revalidatePath` and/or `redirect`.
 7. **Client components stay small**: the compose form and the report button. Keep derived state out of effects (see `ComposeNote` — adjust state during render, don't `setState` in `useEffect`).
 8. **No `any`, no `as unknown as` outside `db.ts`.** Prefer `satisfies` and Prisma's `GetPayload` for row types.
-9. **Styling:** Tailwind utilities + the vocabulary classes from `globals.css`. Read the `fridge-design-system` skill. No inline hex colours, no new CSS files.
+9. **Styling:** Tailwind utilities + the vocabulary classes from `globals.css`. Read the `hearth-design-system` skill. No inline hex colours, no new CSS files.
 10. **Copy is lowercase, warm, short.** Error strings live next to the validation that produces them.
 11. **Tests:** every file in `src/lib/` that contains logic has a sibling `*.test.ts`. Run `npm test` before finishing.
-12. **Honeypot:** the `website` field must stay in the form, visually hidden, and must stay in the schema with `max(0)`. A filled honeypot redirects to `/fridge` without saving.
+12. **Honeypot:** the `website` field must stay in the form, visually hidden, and must stay in the schema with `max(0)`. A filled honeypot redirects to `/hearth` without saving.
 
 ## Adding a payment provider
 
@@ -54,11 +54,12 @@ Edit `prisma/schema.prisma` → `npm run db:migrate -- --name <what-changed>` �
 | `npm run typecheck` | `tsc --noEmit` (run `npx next typegen` first if route types are stale) |
 | `npm test` | vitest, `src/**/*.test.ts` |
 | `npm run db:migrate` | create/apply a migration (dev) |
-| `npm run db:seed` | put 8 sample notes on an empty fridge |
+| `npm run db:seed` | put 8 sample notes on an empty hearth |
 | `npm run db:studio` | browse the SQLite db |
+| `npm run db:migrate:turso` | apply pending migrations to the Turso database named by `TURSO_DATABASE_URL` |
 
-`DATABASE_URL` is a `file:` path relative to `prisma/` — `src/lib/db.ts` resolves it so the app and the CLI open the same file.
+`DATABASE_URL` is a `file:` path relative to `prisma/` — `src/lib/db.ts` resolves it so the app and the CLI open the same file. When `TURSO_DATABASE_URL` is set (production on Vercel) the same file switches to the libsql driver adapter; apply migrations there with `npm run db:migrate:turso` (`scripts/migrate-turso.ts`), never with `prisma migrate`.
 
 ## Definition of done
 
-`npm run lint && npm run typecheck && npm test` clean, the flow works in the browser (home → expand → pin → fridge → help link), and the `ui-reviewer` / `code-reviewer` agents have nothing blocking.
+`npm run lint && npm run typecheck && npm test` clean, the flow works in the browser (home → expand → pin → hearth → warm-this-up link), and the `ui-reviewer` / `code-reviewer` agents have nothing blocking.

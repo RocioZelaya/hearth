@@ -3,7 +3,7 @@ import { SiteHeader } from "./SiteHeader";
 
 type Props = {
   corner?: ReactNode;
-  /** Page content width: a single reading column, or the wide fridge board. */
+  /** Page content width: a single reading column, or the wide board. */
   width?: "column" | "board";
   children: ReactNode;
 };
@@ -16,7 +16,7 @@ export function Page({ corner, width = "column", children }: Props) {
       <SiteHeader corner={corner} />
       <div className="flex flex-1 flex-col">{children}</div>
       <footer className="mt-16 text-center text-sm text-ivory-quiet italic">
-        a note on the fridge. anyone with more than enough can help.
+        a note left by the fire. anyone with more than enough can help.
       </footer>
     </main>
   );

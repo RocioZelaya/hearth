@@ -1,12 +1,12 @@
-# fridge
+# hearth
 
-a fridge full of notes. someone writes what they need and leaves a link where money can be sent. anyone with more than enough can walk by, read, and help.
+notes left by the fire. someone writes what they need and leaves a link where money can be sent. anyone with more than enough can walk by, read, and help.
 
 - **home** (`/`) — one writing line. touch it and it unfolds into a sheet of paper: a title, a thin grey line, the note. below it, your payment link and (optionally) your name.
-- **the fridge** (`/fridge`) — everyone's notes, side by side, each held by an orange magnet, newest first. every note has one warm button: *help with this →*, which opens the author's payment link.
+- **the hearth** (`/hearth`) — everyone's notes, side by side, each held by a brass-orange pin, newest first. every note has one warm button: *warm this up →*, which opens the author's payment link.
 - **a note** (`/notes/<id>`) — a single sheet, shareable.
 
-the look borrows the grammar of [fridgle.net](https://fridgle.net) — speckled fridge surface, crooked paper magnets, system serif, lowercase quiet UI — in deep green with orange warmth. see `.claude/skills/fridge-design-system/SKILL.md`.
+the look borrows the grammar of [fridgle.net](https://fridgle.net) — speckled fridge surface, crooked paper tiles, system serif, lowercase quiet UI — in deep green with orange warmth. see `.claude/skills/hearth-design-system/SKILL.md`.
 
 ## run it
 
@@ -18,7 +18,7 @@ npm run db:seed             # optional: 8 sample notes
 npm run dev                 # http://localhost:3000
 ```
 
-requires node 20.9+. no native modules.
+requires node 20.9+.
 
 ## how it holds up
 
@@ -47,16 +47,26 @@ prisma             schema, migrations, seed
 | `npm run build` / `npm start` | production |
 | `npm run lint` · `npm run typecheck` · `npm test` | the three checks |
 | `npm run db:migrate` · `npm run db:seed` · `npm run db:studio` | database |
+| `npm run db:migrate:turso` | apply migrations to turso (production) |
 
 ## working on it with claude code
 
 the repo ships two skills and three agents under `.claude/`:
 
-- `fridge-design-system` — tokens, vocabulary, motion, voice. load before touching ui.
-- `fridge-conventions` — where things go, the security rules, commands. load before adding a feature.
+- `hearth-design-system` — tokens, vocabulary, motion, voice. load before touching ui.
+- `hearth-conventions` — where things go, the security rules, commands. load before adding a feature.
 - `ui-reviewer` — checks components against the design system.
 - `code-reviewer` — runs lint/typecheck/tests and checks validation, links, privacy, next 16 patterns.
 - `qa-browser` — drives the real app in the browser, desktop and phone, and reports with screenshots.
+
+## deploy (vercel + turso)
+
+vercel has no durable disk, so production notes live in [turso](https://turso.tech) (hosted sqlite). locally nothing changes.
+
+1. create a turso database and grab its url (`libsql://…`) and an auth token.
+2. apply the migrations to it once: `TURSO_DATABASE_URL=… TURSO_AUTH_TOKEN=… npm run db:migrate:turso` (re-run after every new migration).
+3. in vercel, set `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `IP_HASH_SALT` (any long random string) and `DATABASE_URL=file:./dev.db` (only read by the prisma cli at build time).
+4. deploy. `src/lib/db.ts` switches to the libsql adapter whenever `TURSO_DATABASE_URL` is present.
 
 ## not yet
 

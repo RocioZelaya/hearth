@@ -3,11 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "fridge",
-    template: "%s · fridge",
+    default: "hearth",
+    template: "%s · hearth",
   },
   description:
-    "a fridge full of notes. someone writes what they need; anyone with more than enough can help.",
+    "notes left by the fire. someone writes what they need; anyone with more than enough can help.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

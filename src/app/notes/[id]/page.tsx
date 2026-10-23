@@ -9,7 +9,7 @@ import { getNote } from "@/lib/notes";
 export async function generateMetadata({ params }: PageProps<"/notes/[id]">): Promise<Metadata> {
   const { id } = await params;
   const note = await getNote(id);
-  if (!note) return { title: "not on the fridge" };
+  if (!note) return { title: "not by the fire" };
   const description = note.body.length > 160 ? `${note.body.slice(0, 157)}…` : note.body;
   return {
     title: note.title,
@@ -23,10 +23,10 @@ export default function NotePage({ params }: PageProps<"/notes/[id]">) {
     <Page
       corner={
         <>
-          <Link href="/fridge" className="quiet quiet-on-fridge">
-            the fridge
+          <Link href="/hearth" className="quiet quiet-on-wall">
+            the hearth
           </Link>
-          <Link href="/" className="quiet quiet-on-fridge">
+          <Link href="/" className="quiet quiet-on-wall">
             write a note
           </Link>
         </>

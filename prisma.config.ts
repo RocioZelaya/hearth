@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -9,6 +9,7 @@ export default defineConfig({
   },
   engine: "classic",
   datasource: {
-    url: env("DATABASE_URL"),
+    // Only the CLI reads this (generate, migrate dev, seed). Production uses Turso via src/lib/db.ts.
+    url: process.env.DATABASE_URL ?? "file:./dev.db",
   },
 });

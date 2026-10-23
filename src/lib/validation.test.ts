@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LIMITS, formToNoteInput, noteInputSchema, tidyText } from "./validation";
+import { LIMITS, formToNoteInput, noteInputSchema, oneLine, tidyText } from "./validation";
 
 const valid = {
   title: "a second-hand espresso machine",
@@ -70,5 +70,19 @@ describe("tidyText", () => {
   it("keeps single blank lines and inner spacing", () => {
     expect(tidyText("a b\n\nc  d")).toBe("a b\n\nc  d");
     expect(tidyText("   ")).toBe("");
+  });
+});
+
+describe("oneLine", () => {
+  it("flattens newlines and runs of spaces", () => {
+    expect(oneLine("  a\n\n b\t c  ")).toBe("a b c");
+  });
+
+  it("is applied to title and name", () => {
+    const result = noteInputSchema.safeParse({ ...valid, title: "two\nlines here", authorName: "ana\nmaria" });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.data.title).toBe("two lines here");
+    expect(result.data.authorName).toBe("ana maria");
   });
 });

@@ -1,4 +1,4 @@
-// Fridge data model. See .claude/skills/fridge-conventions for how to change it.
+// Hearth data model. See .claude/skills/hearth-conventions for how to change it.
 
 generator client {
   provider = "prisma-client"
@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// A note pinned to the fridge: a short ask plus a payment link.
+/// A note left by the fire: a short ask plus a payment link.
 model Note {
   id         String   @id @default(cuid())
   title      String
